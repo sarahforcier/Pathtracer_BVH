@@ -3,19 +3,39 @@
 bool Bounds3f::Intersect(const Ray &r, float* t) const
 {
     //TODO
-    return false;
+    Vector3f invDir = Vector3f(1.f/r.direction.x, 1.f/r.direction.y, 1.f/r.direction.z);
+    int dirIsNeg[3] = {invDir.x < 0, invDir.y < 0, invDir.z < 0};
+    return IntersectP(r, invDir, dirIsNeg);
 }
 
 Bounds3f Bounds3f::Apply(const Transform &tr)
 {
     //TODO
-       return Bounds3f();
+    if (tr.isRotated()) {
+        Point3f p000 = tr.T3() * min;
+        Point3f p001 = tr.T3() * Point3f(max.x, min.y, min.z);
+        Point3f p010 = tr.T3() * Point3f(min.x, max.y, min.z);
+        Point3f p011 = tr.T3() * Point3f(max.x, max.y, min.z);
+        Point3f p100 = tr.T3() * Point3f(min.x, min.y, max.z);
+        Point3f p101 = tr.T3() * Point3f(max.x, min.y, max.z);
+        Point3f p110 = tr.T3() * Point3f(max.x, max.y, min.z);
+        Point3f p111 = tr.T3() * max;
+        min = glm::min(p000, glm::min(p001, glm::min(p010, glm::min(p011,
+              glm::min(p100, glm::min(p101, glm::min(p110, p111)))))));
+        max = glm::max(p000, glm::max(p001, glm::max(p010, glm::max(p011,
+              glm::max(p100, glm::max(p101, glm::max(p110, p111)))))));
+        return Bounds3f(min, max);
+    } else {
+        min = tr.T3() * min;
+        max = tr.T3() * max;
+        return Bounds3f(min, max);
+    }
 }
 
 float Bounds3f::SurfaceArea() const
 {
-    //TODO
-    return 0.f;
+    Vector3f d = Diagonal();
+    return 2.f * d.x * d.y + 2.f * d.y * d.z + 2.f * d.x * d.z;
 }
 
 Bounds3f Union(const Bounds3f& b1, const Bounds3f& b2)

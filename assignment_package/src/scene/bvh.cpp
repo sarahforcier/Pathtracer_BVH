@@ -67,12 +67,17 @@ BVHAccel::~BVHAccel()
 BVHAccel::BVHAccel(const std::vector<std::shared_ptr<Primitive> > &p, int maxPrimsInNode)
     : maxPrimsInNode(std::min(255, maxPrimsInNode)), primitives(p)
 {
+    QTime timer = QTime();
+    timer.start();
 
     //TODO
+
+    std::cout << "BVH Build Time: " + timer.elapsed();
+
 }
 
 bool BVHAccel::Intersect(const Ray &ray, Intersection *isect) const
 {
     //TODO
-       return false;
+    return false;
 }

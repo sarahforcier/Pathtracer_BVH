@@ -1,7 +1,10 @@
 #include "disc.h"
 
 Bounds3f Disc::WorldBound() const {
-   return Bounds3f();
+    Vector3f min = Vector3f(-1.f, -1.f, 0.f);
+    Vector3f max = Vector3f(1.f, 1.f, 0.f);
+    Bounds3f bound = Bounds3f(min, max);
+    return bound.Apply(transform);
 }
 
 float Disc::Area() const

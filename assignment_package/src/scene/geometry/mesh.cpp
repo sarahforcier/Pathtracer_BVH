@@ -5,7 +5,16 @@
 
 Bounds3f Triangle::WorldBound() const
 {
-    //TODO
+    float minx = glm::min(points[0].x, glm::min(points[1].x, points[2].x));
+    float miny = glm::min(points[0].y, glm::min(points[1].y, points[2].y));
+    float minz = glm::min(points[0].z, glm::min(points[1].z, points[2].z));
+    float maxx = glm::max(points[0].x, glm::max(points[1].x, points[2].x));
+    float maxy = glm::max(points[0].y, glm::max(points[1].y, points[2].y));
+    float maxz = glm::max(points[0].z, glm::max(points[1].z, points[2].z));
+    Vector3f min = Vector3f(minx, miny, minz);
+    Vector3f max = Vector3f(maxx, maxy, maxz);
+    Bounds3f bound = Bounds3f(min, max);
+    return bound;
 }
 
 float Triangle::Area() const

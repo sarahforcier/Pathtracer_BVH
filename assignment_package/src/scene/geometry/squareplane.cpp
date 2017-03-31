@@ -1,7 +1,10 @@
 #include "squareplane.h"
 
 Bounds3f SquarePlane::WorldBound() const {
-   return Bounds3f();
+    Vector3f min = Vector3f(-0.5f, -0.5f, 0.f);
+    Vector3f max = Vector3f(0.5f, 0.5f, 0.f);
+    Bounds3f bound = Bounds3f(min, max);
+    return bound.Apply(transform);
 }
 
 float SquarePlane::Area() const

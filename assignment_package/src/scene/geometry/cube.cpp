@@ -2,7 +2,10 @@
 #include <iostream>
 
 Bounds3f Cube::WorldBound() const {
-   return Bounds3f();
+   Vector3f min = Vector3f(-0.5f, -0.5f, -0.5f);
+   Vector3f max = Vector3f(0.5f, 0.5f, 0.5f);
+   Bounds3f bound = Bounds3f(min, max);
+   return bound.Apply(transform);
 }
 
 float Cube::Area() const

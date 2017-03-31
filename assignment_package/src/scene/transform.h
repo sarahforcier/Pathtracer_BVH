@@ -16,6 +16,7 @@ public:
 
     const glm::vec3 &position() const {return translation;}
     const glm::vec3 &getScale() const {return scale;}
+    const bool isRotated() const {rotation != glm::vec3(0);}
 
 private:
     glm::vec3 translation;

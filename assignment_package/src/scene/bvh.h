@@ -1,5 +1,7 @@
 #pragma once
 #include "geometry/primitive.h"
+#include <QTime>
+#include <iostream>
 
 
 // Forward declarations of structs used by our BVH tree

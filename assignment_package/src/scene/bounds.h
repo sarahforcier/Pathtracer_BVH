@@ -108,8 +108,6 @@ public:
     Point3f min, max;
 };
 
-
-
 Bounds3f Union(const Bounds3f& b1, const Bounds3f& b2);
 Bounds3f Union(const Bounds3f& b1, const Point3f& p);
 Bounds3f Union(const Bounds3f& b1, const glm::vec4& p);
