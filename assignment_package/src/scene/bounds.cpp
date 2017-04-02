@@ -5,6 +5,7 @@ bool Bounds3f::Intersect(const Ray &r, float* t) const
     //TODO
     Vector3f invDir = Vector3f(1.f/r.direction.x, 1.f/r.direction.y, 1.f/r.direction.z);
     int dirIsNeg[3] = {invDir.x < 0, invDir.y < 0, invDir.z < 0};
+    *t = 0;
     return IntersectP(r, invDir, dirIsNeg);
 }
 

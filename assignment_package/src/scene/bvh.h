@@ -25,12 +25,13 @@ public:
 private:
     BVHBuildNode *recursiveBuild(
         std::vector<BVHPrimitiveInfo> &primitiveInfo,
-        int start, int end, std::vector<std::shared_ptr<Primitive>> &orderedPrims);
+        int start, int end, int *totalNodes, std::vector<std::shared_ptr<Primitive>> &orderedPrims);
 
     BVHBuildNode *buildUpperSAH(std::vector<BVHBuildNode *> &treeletRoots,
                                 int start, int end, int *totalNodes) const;
 
     int flattenBVHTree(BVHBuildNode *node, int *offset);
+
 
 
     //Members
