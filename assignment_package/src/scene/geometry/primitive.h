@@ -4,6 +4,8 @@
 #include <scene/materials/material.h>
 #include <scene/bounds.h>
 
+// forward declaration only says the class will exist, but not what member functions it will have
+// thus any uses of shape must be defined in the cpp file
 class AreaLight;
 class Shape;
 
@@ -30,7 +32,6 @@ public:
     bool ProduceBSDF(Intersection *isect) const;
 
     Bounds3f WorldBound() const;
-
 
     QString name;//Mainly used for debugging purposes
     std::shared_ptr<Shape> shape;

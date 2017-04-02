@@ -8,8 +8,8 @@
 // They are defined in the .cpp file
 struct BVHBuildNode;
 struct BVHPrimitiveInfo;
-struct MortonPrimitive;
 struct LinearBVHNode;
+
 
 class BVHAccel : public Primitive
 {
@@ -25,8 +25,7 @@ public:
 private:
     BVHBuildNode *recursiveBuild(
         std::vector<BVHPrimitiveInfo> &primitiveInfo,
-        int start, int end, int *totalNodes,
-        std::vector<std::shared_ptr<Primitive>> &orderedPrims);
+        int start, int end, std::vector<std::shared_ptr<Primitive>> &orderedPrims);
 
     BVHBuildNode *buildUpperSAH(std::vector<BVHBuildNode *> &treeletRoots,
                                 int start, int end, int *totalNodes) const;
@@ -37,5 +36,6 @@ private:
     //Members
     const int maxPrimsInNode;
     std::vector<std::shared_ptr<Primitive>> primitives;
+    BVHBuildNode *root = nullptr;
     LinearBVHNode *nodes = nullptr;
 };

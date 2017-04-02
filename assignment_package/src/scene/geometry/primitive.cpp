@@ -1,5 +1,9 @@
 #include "primitive.h"
 
+Bounds3f Primitive::WorldBound() const {
+    return shape->WorldBound();
+}
+
 bool Primitive::Intersect(const Ray &r, Intersection *isect) const
 {
     if(!shape->Intersect(r, isect)) return false;
