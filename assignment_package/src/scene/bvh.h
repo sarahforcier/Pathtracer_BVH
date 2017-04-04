@@ -9,7 +9,7 @@
 struct BVHBuildNode;
 struct BVHPrimitiveInfo;
 struct LinearBVHNode;
-
+struct BucketInfo;
 
 class BVHAccel : public Primitive
 {
@@ -30,7 +30,7 @@ private:
     BVHBuildNode *buildUpperSAH(std::vector<BVHBuildNode *> &treeletRoots,
                                 int start, int end, int *totalNodes) const;
 
-    int flattenBVHTree(BVHBuildNode *node, int *offset);
+    int flattenBVHTree(BVHBuildNode *node, int offset);
 
 
 
@@ -38,5 +38,5 @@ private:
     const int maxPrimsInNode;
     std::vector<std::shared_ptr<Primitive>> primitives;
     BVHBuildNode *root = nullptr;
-    LinearBVHNode *nodes = nullptr;
+    std::vector<std::shared_ptr<LinearBVHNode>> nodes;
 };

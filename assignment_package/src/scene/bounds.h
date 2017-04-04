@@ -78,7 +78,7 @@ public:
 
     //DELETEME
     inline bool IntersectP(const Ray &ray, const Vector3f &invDir,
-                           const int dirIsNeg[3]) const {
+                           const int dirIsNeg[3], float *t) const {
         const Bounds3f &bounds = *this;
         // Check for ray intersection against $x$ and $y$ slabs
         Float tMin = (bounds[dirIsNeg[0]].x - ray.origin.x) * invDir.x;
@@ -102,6 +102,7 @@ public:
         if (tMin > tzMax || tzMin > tMax) return false;
         if (tzMin > tMin) tMin = tzMin;
         if (tzMax < tMax) tMax = tzMax;
+        *t = tMax;
         return (tMax > 0);
     }
 
