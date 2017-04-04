@@ -40,6 +40,8 @@ struct BucketInfo {
 };
 
 struct LinearBVHNode {
+    LinearBVHNode() {}
+
     Bounds3f bounds;
     union {
         int primitivesOffset;   // leaf
@@ -54,11 +56,11 @@ BVHAccel::~BVHAccel() {}
 
 BVHBuildNode* BVHAccel::recursiveBuild(
     std::vector<BVHPrimitiveInfo> &primitiveInfo,
-    int start, int end, int *totalNodes,
+    int start, int end, int totalNodes,
     std::vector<std::shared_ptr<Primitive>> &orderedPrims) {
 
     BVHBuildNode* node;
-    (*totalNodes) ++;
+    totalNodes++;
 
     // compute bounds of all primitives
     Bounds3f bounds;
@@ -84,7 +86,6 @@ BVHBuildNode* BVHAccel::recursiveBuild(
         center_bounds = Union(center_bounds, primitiveInfo[i].centroid);
     }
     int splitAxis = center_bounds.MaximumExtent();
-    int middle = (start + end)/2;
 
     // corner case when center bounds has no volume (create leaf)
     if (center_bounds.max[splitAxis] == center_bounds.min[splitAxis]) {
@@ -103,7 +104,7 @@ BVHBuildNode* BVHAccel::recursiveBuild(
         buckets.resize(numBuckets);
         for (int i = start; i < end; i++) {
             int b = numBuckets * center_bounds.Offset(primitiveInfo[i].centroid)[splitAxis];
-            if (b = numBuckets) b = numBuckets - 1;
+            if (b == numBuckets) b = numBuckets - 1;
             buckets[b].count ++;
             buckets[b].bounds = Union(buckets[b].bounds, primitiveInfo[i].bounds);
         }
@@ -127,20 +128,21 @@ BVHBuildNode* BVHAccel::recursiveBuild(
         float minCost = cost[0];
         int minBucket = 0;
         for (int i = 1; i < numBuckets; i ++) {
-            if (cost[i] < minCost) {
+            if (cost[i] <= minCost) {
                 minCost = cost[i];
                 minBucket = i;
             }
         }
         // calculate mid split
         float leafCost = num_prims;
+        int middle = (start + end)/2;
         if (num_prims > maxPrimsInNode || minCost < leafCost) {
             BVHPrimitiveInfo *pmid = std::partition(&primitiveInfo[start],
-                                                    &primitiveInfo[end] + 1,
+                                                    &primitiveInfo[end - 1] + 1,
                 [=](const BVHPrimitiveInfo &pi) {
                     int b = numBuckets * center_bounds.Offset(pi.centroid)[splitAxis];
                     if (b == numBuckets) b = numBuckets - 1;
-                    return b <= minCost;
+                    return b <= minBucket;
                 });
             middle = pmid - &primitiveInfo[0];
         } else {
@@ -152,9 +154,9 @@ BVHBuildNode* BVHAccel::recursiveBuild(
             return node;
         }
         // create node
-        node->InitInterior(splitAxis,
-                recursiveBuild(primitiveInfo, start, middle, totalNodes, orderedPrims),
-                recursiveBuild(primitiveInfo, middle, end, totalNodes, orderedPrims));
+        BVHBuildNode *left = recursiveBuild(primitiveInfo, start, middle, totalNodes, orderedPrims);
+        BVHBuildNode *right = recursiveBuild(primitiveInfo, middle, end, totalNodes, orderedPrims);
+        node->InitInterior(splitAxis, left, right);
     }
     return node;
 }
@@ -177,7 +179,7 @@ BVHAccel::BVHAccel(const std::vector<std::shared_ptr<Primitive> > &p, int maxPri
         primitiveInfo[i] = BVHPrimitiveInfo(primitives[i]->name, i, primitives[i]->WorldBound());
     }
     std::vector<std::shared_ptr<Primitive>> orderedPrims;
-    root = recursiveBuild(primitiveInfo, 0, primitives.size(), &totalNodes, orderedPrims);
+    root = recursiveBuild(primitiveInfo, 0, primitives.size(), totalNodes, orderedPrims);
     primitives.swap(orderedPrims);
 
     int offset = 0;
@@ -188,21 +190,22 @@ BVHAccel::BVHAccel(const std::vector<std::shared_ptr<Primitive> > &p, int maxPri
 }
 
 int BVHAccel::flattenBVHTree(BVHBuildNode *node, int offset) {
-    std::shared_ptr<LinearBVHNode> linearNode;
-    nodes[offset] = linearNode;
-    linearNode->bounds = node->bounds;
+    LinearBVHNode linearNode;
+    nodes[offset] = std::make_shared<LinearBVHNode>();
+    linearNode.bounds.min = node->bounds.min;
+    linearNode.bounds.max = node->bounds.max;
     int myOffset = offset++;
     // leaf node
     if (node->nPrimitives > 0) {
-        linearNode->primitivesOffset = node->firstPrimOffset;
-        linearNode->nPrimitives = node->nPrimitives;
+        linearNode.primitivesOffset = node->firstPrimOffset;
+        linearNode.nPrimitives = node->nPrimitives;
 
     // interior node (depth first search array)
     } else {
-        linearNode->axis = node->splitAxis;
-        linearNode->nPrimitives = 0;
+        linearNode.axis = node->splitAxis;
+        linearNode.nPrimitives = 0;
         flattenBVHTree(node->children[0], offset);
-        linearNode->secondChildOffset = flattenBVHTree(node->children[1], offset);
+        linearNode.secondChildOffset = flattenBVHTree(node->children[1], offset);
     }
     return myOffset;
 }
