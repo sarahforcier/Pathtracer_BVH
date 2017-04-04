@@ -137,14 +137,14 @@ BVHBuildNode* BVHAccel::recursiveBuild(
         float leafCost = num_prims;
         int middle = (start + end)/2;
         if (num_prims > maxPrimsInNode || minCost < leafCost) {
-            BVHPrimitiveInfo *pmid = std::partition(&primitiveInfo[start],
-                                                    &primitiveInfo[end - 1] + 1,
+            std::vector<BVHPrimitiveInfo>::iterator pmid = std::partition(primitiveInfo.begin(),
+                                                    primitiveInfo.end(),
                 [=](const BVHPrimitiveInfo &pi) {
                     int b = numBuckets * center_bounds.Offset(pi.centroid)[splitAxis];
                     if (b == numBuckets) b = numBuckets - 1;
                     return b <= minBucket;
                 });
-            middle = pmid - &primitiveInfo[0];
+            middle = &(*pmid) - &primitiveInfo[0];
         } else {
             for (int i = start; i < end; i ++) {
                 int prim_num = primitiveInfo[i].primitiveNumber;
@@ -190,22 +190,22 @@ BVHAccel::BVHAccel(const std::vector<std::shared_ptr<Primitive> > &p, int maxPri
 }
 
 int BVHAccel::flattenBVHTree(BVHBuildNode *node, int offset) {
-    LinearBVHNode linearNode;
-    nodes[offset] = std::make_shared<LinearBVHNode>();
-    linearNode.bounds.min = node->bounds.min;
-    linearNode.bounds.max = node->bounds.max;
+    std::shared_ptr<LinearBVHNode> linearNode = std::make_shared<LinearBVHNode>();
+    nodes[offset] = linearNode;
+    linearNode->bounds.min = node->bounds.min;
+    linearNode->bounds.max = node->bounds.max;
     int myOffset = offset++;
     // leaf node
     if (node->nPrimitives > 0) {
-        linearNode.primitivesOffset = node->firstPrimOffset;
-        linearNode.nPrimitives = node->nPrimitives;
+        linearNode->primitivesOffset = node->firstPrimOffset;
+        linearNode->nPrimitives = node->nPrimitives;
 
     // interior node (depth first search array)
     } else {
-        linearNode.axis = node->splitAxis;
-        linearNode.nPrimitives = 0;
+        linearNode->axis = node->splitAxis;
+        linearNode->nPrimitives = 0;
         flattenBVHTree(node->children[0], offset);
-        linearNode.secondChildOffset = flattenBVHTree(node->children[1], offset);
+        linearNode->secondChildOffset = flattenBVHTree(node->children[1], offset);
     }
     return myOffset;
 }
