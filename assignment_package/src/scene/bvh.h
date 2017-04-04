@@ -1,6 +1,6 @@
 #pragma once
 #include "geometry/primitive.h"
-#include <QTime>
+#include <QElapsedTimer>
 #include <iostream>
 
 
@@ -25,12 +25,12 @@ public:
 private:
     BVHBuildNode *recursiveBuild(
         std::vector<BVHPrimitiveInfo> &primitiveInfo,
-        int start, int end, int totalNodes, std::vector<std::shared_ptr<Primitive>> &orderedPrims);
+        int start, int end, int *totalNodes, std::vector<std::shared_ptr<Primitive>> &orderedPrims);
 
     BVHBuildNode *buildUpperSAH(std::vector<BVHBuildNode *> &treeletRoots,
                                 int start, int end, int *totalNodes) const;
 
-    int flattenBVHTree(BVHBuildNode *node, int offset);
+    int flattenBVHTree(BVHBuildNode *node, int *offset);
 
 
 
@@ -39,4 +39,5 @@ private:
     std::vector<std::shared_ptr<Primitive>> primitives;
     BVHBuildNode *root = nullptr;
     std::vector<std::shared_ptr<LinearBVHNode>> nodes;
+    QElapsedTimer elapsedTime;
 };
