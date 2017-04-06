@@ -8,7 +8,7 @@ class Bounds3f
 {
 public:
     Bounds3f()
-        : min(), max()
+        : min(INFINITY), max(-INFINITY)
     {}
     Bounds3f(const Point3f& min, const Point3f& max)
         : min(min), max(max)
@@ -57,7 +57,7 @@ public:
     // Returns the surface area of this bounding box
     float SurfaceArea() const;
 
-    bool Intersect(const Ray& r , float* t) const;
+    bool Intersect(const Ray& r, float* t) const;
 
     //DELETEME
     inline const Point3f& operator[](int i) const {
@@ -102,7 +102,7 @@ public:
         if (tMin > tzMax || tzMin > tMax) return false;
         if (tzMin > tMin) tMin = tzMin;
         if (tzMax < tMax) tMax = tzMax;
-        *t = tMax;
+        *t = tMin;
         return (tMax > 0);
     }
 

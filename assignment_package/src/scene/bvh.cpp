@@ -76,10 +76,8 @@ BVHBuildNode* BVHAccel::recursiveBuild(
     int num_prims = end - start;
     int offset = orderedPrims.size();
     if (num_prims == 1) {
-        for (int i = start; i < end; i ++) {
-            int prim_num = primitiveInfo[i].primitiveNumber;
-            orderedPrims.push_back(primitives[prim_num]);
-        }
+        int prim_num = primitiveInfo[start].primitiveNumber;
+        orderedPrims.push_back(primitives[prim_num]);
         node->InitLeaf(offset, num_prims, bounds);
         return node;
     }
@@ -103,7 +101,7 @@ BVHBuildNode* BVHAccel::recursiveBuild(
 
     } else {
         // partition into buckets
-        int numBuckets = 12;
+        int numBuckets = 4;
         std::vector<BucketInfo> buckets;
         buckets.resize(numBuckets);
         for (int i = start; i < end; i++) {
@@ -114,16 +112,19 @@ BVHBuildNode* BVHAccel::recursiveBuild(
         }
         // compute cost
         float cost[numBuckets - 1];
-        for (int i = 0; i < numBuckets; i++) {
-            Bounds3f left; int countL = 0;
+        int countL = 0; int countR = 0;
+        for (int i = 0; i < numBuckets - 1; i++) { // possible divisions
+            Bounds3f left;
+            countL = 0;
             for (int j = 0; j <= i; j++) { // left side
-                left = Union(left, buckets[j].bounds);
                 countL += buckets[j].count;
+                left = Union(left, buckets[j].bounds);
             }
-            Bounds3f right; int countR = 0;
+            Bounds3f right;
+            countR = 0;
             for (int j = i + 1; j < numBuckets; j++) { // right side
-                right = Union(right, buckets[j].bounds);
                 countR += buckets[j].count;
+                right = Union(right, buckets[j].bounds);
             }
             cost[i] = 0.125f + (countL * left.SurfaceArea() +
                                 countR * right.SurfaceArea()) / bounds.SurfaceArea();
@@ -131,7 +132,7 @@ BVHBuildNode* BVHAccel::recursiveBuild(
         // choose split to minimize cost
         float minCost = cost[0];
         int minBucket = 0;
-        for (int i = 1; i < numBuckets; i ++) {
+        for (int i = 1; i < numBuckets - 1; i ++) {
             if (cost[i] <= minCost) {
                 minCost = cost[i];
                 minBucket = i;
@@ -141,14 +142,14 @@ BVHBuildNode* BVHAccel::recursiveBuild(
         float leafCost = num_prims;
         int middle = (start + end)/2;
         if (num_prims > maxPrimsInNode || minCost < leafCost) {
-            std::vector<BVHPrimitiveInfo>::iterator pmid = std::partition(primitiveInfo.begin(),
-                                                                          primitiveInfo.end(),
+            BVHPrimitiveInfo *pmid = std::partition(&primitiveInfo[start],
+                                                    &primitiveInfo[end - 1] + 1,
              [=](const BVHPrimitiveInfo &pi) {
                 int b = numBuckets * center_bounds.Offset(pi.centroid)[splitAxis];
                 if (b == numBuckets) b = numBuckets - 1;
                 return b <= minBucket;
             });
-            middle = &(*pmid) - &primitiveInfo[0];
+            middle = pmid - &primitiveInfo[0];
         } else {
             for (int i = start; i < end; i ++) {
                 int prim_num = primitiveInfo[i].primitiveNumber;
@@ -219,18 +220,27 @@ bool BVHAccel::Intersect(const Ray &ray, Intersection *isect) const
     //TODO
     if (root->nPrimitives == 0) return false;
     bool hit = false;
+    Intersection inter;
     Vector3f invDir(1.f/ray.direction.x, 1.f/ray.direction.y, 1.f/ray.direction.z);
     int dirIsNeg[3] = {invDir.x < 0.f, invDir.y < 0.f, invDir.z < 0.f};
     int toVisit = 0, currIndex = 0;
     int nodes2visit[64]; // stack
+    float t = INFINITY;
     while (true) {
         std::shared_ptr<LinearBVHNode> node = nodes[currIndex];
-        float t;
-        if (node->bounds.Intersect(ray, &t)) {
+        float tMin;
+        if (node->bounds.Intersect(ray, &tMin)) {
+            if (tMin > t) break;
             // leaf node
             if (node->child == 'n') {
                 for (int i = 0; i < node->nPrimitives; i++) {
-                    if (primitives[node->primitivesOffset + i]->Intersect(ray, isect)) hit = true;
+                    if (primitives[node->primitivesOffset + i]->Intersect(ray, &inter)) {
+                        hit = true;
+                        if (inter.t < t) {
+                            t = inter.t;
+                            *isect = inter;
+                        }
+                    }
                 }
                 if (toVisit == 0) break;
                 currIndex = nodes2visit[--toVisit];
@@ -241,7 +251,7 @@ bool BVHAccel::Intersect(const Ray &ray, Intersection *isect) const
                     currIndex = node->secondChildOffset;
                 } else {
                     nodes2visit[toVisit++] = node->secondChildOffset;
-                    currIndex = currIndex +1;
+                    currIndex++;
                 }
             }
         } else {
