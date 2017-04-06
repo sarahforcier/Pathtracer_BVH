@@ -230,7 +230,7 @@ bool BVHAccel::Intersect(const Ray &ray, Intersection *isect) const
         std::shared_ptr<LinearBVHNode> node = nodes[currIndex];
         float tMin;
         if (node->bounds.Intersect(ray, &tMin)) {
-            if (tMin > t) break;
+//            if (tMin > t) break;
             // leaf node
             if (node->child == 'n') {
                 for (int i = 0; i < node->nPrimitives; i++) {

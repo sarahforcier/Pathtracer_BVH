@@ -1,0 +1,153 @@
+{
+  "frames" :[
+    {
+    "frameNumber" : 0,
+    "scene" : {
+      "camera" : {
+        "target" : [0, 2.5, 0],
+        "eye" : [0, 5.5, -30],
+        "worldUp" : [0, 1, 0],
+        "fov" : 19.5,
+        "width" : 400,
+        "height": 400
+      },
+      "primitives" : [
+        {
+          "shape" : "SquarePlane",
+          "name" : "Floor",
+          "material" : "matteWhite",
+          "transform" : {
+            "translate" : [0, -2.5, 0],
+            "rotate" : [-90, 0, 0],
+            "scale" : [10, 10, 1]
+          }
+        },
+        {
+          "shape" : "SquarePlane",
+          "name" : "Red wall",
+          "material" : "matteRed",
+          "transform" : {
+            "translate" : [5,2.5,0],
+            "rotate" : [0, -90, 0],
+            "scale" : [10, 10, 1]
+          }
+        },
+        {
+          "shape" : "SquarePlane",
+          "name" : "Blue Wall",
+          "material" : "matteBlue",
+          "transform" : {
+            "translate" : [-5, 2.5, 0],
+            "rotate" : [0,90,0],
+            "scale" : [10, 10, 1]
+          }
+        },
+        {
+          "shape" : "SquarePlane",
+          "name" : "Back Wall",
+          "material" : "matteWhite",
+          "transform" : {
+            "translate" : [0,2.5,5],
+            "rotate" : [0,180,0],
+            "scale" : [10, 10, 1]
+          }
+        },
+        {
+          "shape" : "SquarePlane",
+          "name" : "Ceiling Wall",
+          "material" : "matteWhite",
+          "transform" : {
+            "translate" : [0, 7.5, 0],
+            "rotate" : [90,0,0],
+            "scale" : [10, 10, 1]
+          }
+        },
+        {
+          "shape" : "Mesh",
+          "filename" : "objs/Wolfbig.obj",
+          "name" : "Wolf",
+          "material" : "matteWhite",
+          "transform" : {
+            "translate" : [-0.5, -2, -1],
+            "rotate" : [0,120,0],
+            "scale" : [0.025, 0.025, 0.025]
+          }
+        },
+        {
+          "shape" : "Mesh",
+          "filename" : "objs/low_poly_tree.obj",
+          "name" : "Tree",
+          "material" : "matteGreen",
+          "transform" : {
+            "translate" : [2.3, -3, 3.5],
+            "rotate" : [0,180,0],
+            "scale" : [0.025, 0.025,0.025]
+          }
+        }
+      ],
+      "lights" : [
+        {
+          "shape" : "SquarePlane",
+          "name" : "Light Source",
+          "type" : "DiffuseAreaLight",
+          "lightColor" : [4,12,17],
+          "intensity" : 2,
+          "transform" : {
+            "translate" : [0,-2,-8],
+            "rotate" : [-45,0,0],
+            "scale" : [3, 3, 1]
+          },
+          "isDelta" : false,
+          "twoSided" : true
+        },
+        {
+          "shape" : "Sphere",
+          "name" : "Light Source",
+          "type" : "DiffuseAreaLight",
+          "lightColor" : [9.5,6,2],
+          "intensity" : 0.25,
+          "transform" : {
+            "translate" : [-2, 5, 0],
+            "rotate" : [0,0,0],
+            "scale" : [1,1,1]
+          },
+          "isDelta" : false,
+          "twoSided" : true
+        }
+      ],
+      "materials" : [
+        {
+          "type" : "MatteMaterial",
+          "name" : "matteWhite",
+            "Kd" : [0.85, 0.81, 0.78],
+          "sigma": 0
+        },
+        {
+          "type" : "MatteMaterial",
+          "name" : "matteGrey",
+            "Kd" : [0.3, 0.3, 0.3],
+          "sigma": 0
+        },
+        {
+          "type" : "MatteMaterial",
+          "name" : "matteRed",
+          "Kd" : [0.63, 0.065, 0.05],
+          "sigma": 0
+        },
+        {
+          "type" : "MatteMaterial",
+          "name" : "matteGreen",
+          "Kd" : [0.3, 0.6, 0.1],
+          "sigma": 0
+        },
+        {
+          "type" : "MatteMaterial",
+          "name" : "matteBlue",
+          "Kd" : [0.09, 0.14, 0.45],
+          "sigma": 0
+        }
+      ]
+    }
+  }
+]
+}
