@@ -51,11 +51,15 @@ struct LinearBVHNode {
     unsigned char child;        // ensure 32 byte total size
 };
 
-BVHAccel::~BVHAccel() {
-    for (auto i : root->children) {
-        delete i;
+void deleteNode(BVHBuildNode* node) {
+    if (node->children.size() != 0) {
+        for (auto i : node->children) deleteNode(i);
     }
-    delete root;
+    delete node;
+}
+
+BVHAccel::~BVHAccel() {
+    deleteNode(root);
 }
 
 BVHBuildNode* BVHAccel::recursiveBuild(

@@ -9,9 +9,9 @@ Cornell Box
 -------------
 Rendered with 100 samples per pixel
 
-| Full | Direct | Naive |
+| Full BVH | Direct BVH | Naive BVH |
 | -----------| ---------- | ------- |
-| ![](./full_bvh.png) | ![](./direct_bvh.png) |![](./naive_bvh.png) |
+| ![](./full_bvh_correct.png) | ![](./direct_bvh.png) |![](./naive_bvh.png) |
 
 | Full | Direct | Naive |
 | -----------| ---------- | ------- |
@@ -46,3 +46,7 @@ Wolf with a Tree
 BVH Build Time: 26 milliseconds
 
 400 samples per pixel and 512x512 resolution. 
+
+Blooper
+-----------
+![](./full_bvh.png)
