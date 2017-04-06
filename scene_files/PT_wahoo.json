@@ -82,8 +82,8 @@
           "lightColor" : [17,12,4],
           "intensity" : 2,
           "transform" : {
-            "translate" : [0,-2,-8],
-            "rotate" : [-45,0,0],
+            "translate" : [0,6,-8],
+            "rotate" : [45,0,0],
             "scale" : [3, 3, 1]
           },
           "isDelta" : false,
