@@ -27,14 +27,14 @@ BVH Build Time: 0 milliseconds
 
 Mario Box
 --------------
-Rendered with 4 samples per pixel
-
 | With BVH | Without |
 | -----------| ---------- |
 | ![](./mario2x2_bvh.png) | ![](./mario2x2.png) |
 
-
+Direct Lighting
 BVH Build Time: 51 milliseconds
+Rendered with 4 samples per pixel
+5172 triangles
 
 | Integrator | BVH Render | without | speedup |
 | -----------| ---------- | ------- | -------
@@ -43,9 +43,14 @@ BVH Build Time: 51 milliseconds
 
 Wolf with a Tree
 -----------
+Full Lighting
 BVH Build Time: 26 milliseconds
+Render Time: 6674968 milliseconds
+Rendered with 900 samples per pixel
+1376 triangles
+600x600 resolution 
 
-400 samples per pixel and 512x512 resolution. 
+![](./wolf_on_floor.png)
 
 Blooper
 -----------

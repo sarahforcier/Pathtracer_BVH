@@ -21,6 +21,8 @@ public:
     unsigned int width, height;  // Screen dimensions
     float near_clip;  // Near clip plane distance
     float far_clip;  // Far clip plane distance
+    float lensR;
+    float focalD;
 
     //Computed attributes
     float aspect;

@@ -396,6 +396,8 @@ Camera JSONReader::LoadCamera(QJsonObject& camera)
     if(camera.contains(QString("fov"))) result.fovy = camera["fov"].toDouble();
     if(camera.contains(QString("nearClip"))) result.near_clip = camera["nearClip"].toDouble();
     if(camera.contains(QString("farClip"))) result.far_clip = camera["farClip"].toDouble();
+    if(camera.contains(QString("focalDistance"))) result.focalD = camera["focalDistance"].toDouble();
+    if(camera.contains(QString("lensRadius"))) result.lensR = camera["lensRadius"].toDouble();
 
     result.RecomputeAttributes();
     return result;

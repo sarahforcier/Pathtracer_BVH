@@ -4,7 +4,7 @@
 #include "primitive.h"
 
 struct CSGNode;
-enum operation { UNION , INTER, DIFFER };
+enum operation { OBJECT, UNION , INTER, DIFFER };
 
 class CSG : public Primitive
 {

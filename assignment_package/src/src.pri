@@ -55,8 +55,7 @@ SOURCES += \
     $$PWD/scene/materials/transmissivelmaterial.cpp \
     $$PWD/scene/bounds.cpp \
     $$PWD/scene/bvh.cpp \
-    $$PWD/scene/geometry/csg.cpp \
-    $$PWD/scene/lenscamera.cpp
+    $$PWD/scene/geometry/csg.cpp
 
 HEADERS += \
     $$PWD/mainwindow.h \
@@ -113,5 +112,4 @@ HEADERS += \
     $$PWD/scene/materials/transmissivelmaterial.h \
     $$PWD/scene/bounds.h \
     $$PWD/scene/bvh.h \
-    $$PWD/scene/geometry/csg.h \
-    $$PWD/scene/lenscamera.h
+    $$PWD/scene/geometry/csg.h

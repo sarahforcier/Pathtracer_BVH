@@ -105,8 +105,14 @@ void Triangle::ComputeTBN(const Point3f &P, Normal3f *nor, Vector3f *tan, Vector
 
 void Triangle::ComputeTriangleTBN(const Point3f &P, Normal3f *nor, Vector3f *tan, Vector3f *bit, const Point2f &uv) const
 {
-    *nor = GetNormal(P);
     //TODO: Compute tangent and bitangent based on UV coordinates.
+//    Vector3f p1 = points[1] - points[0];
+//    Vector3f p2 = points[2] - points[0];
+//    Vector2f u1 = uvs[1] - uvs[0];
+//    Vector2f u2 = uvs[2] - uvs[0];
+//    *tan = (u2.y * p1 - u1.y * p2) / (u2.y * u1.x - u1.y * u2.x);
+//    *bit = (p2 - u2.x * (*tan) ) / u2.y;
+    *nor = GetNormal(P);
 }
 
 
