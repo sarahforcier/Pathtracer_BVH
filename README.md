@@ -7,16 +7,33 @@ Sarah Forcier
 
 Cornell Box
 -------------
+Rendered with 100 samples per pixel
+
+| Full | Direct | Naive |
+| -----------| ---------- | ------- |
+| ![](./full_bvh.png) | ![](./direct_bvh.png) |![](./naive_bvh.png) |
+
+| Full | Direct | Naive |
+| -----------| ---------- | ------- |
+| ![](./full.png) | ![](./direct.png) |![](./naive.png) |
+
 BVH Build Time: 0 milliseconds
 
 | Integrator | BVH Render | without | speedup |
-| -----------| ---------- | ------- | -------
-| Full 		 | 429401 | 569307 | 1.33
-| Direct 	 | 83374 | 117069 | 1.40
-| Naive 	 | 175994 | 256472 | 1.46
+| -----------| ---------- | ------- | ------- |
+| Full 		 | 429401 | 569307 | 1.33 |
+| Direct 	 | 83374 | 117069 | 1.40 |
+| Naive 	 | 175994 | 256472 | 1.46 |
 
 Mario Box
 --------------
+Rendered with 4 samples per pixel
+
+| With BVH | Without |
+| -----------| ---------- |
+| ![](./mario2x2_bvh.png) | ![](./mario2x2.png) |
+
+
 BVH Build Time: 51 milliseconds
 
 | Integrator | BVH Render | without | speedup |
@@ -25,10 +42,6 @@ BVH Build Time: 51 milliseconds
 
 
 Wolf with a Tree
------------
-BVH Build Time: 26 milliseconds
-
-Cat on a Box
 -----------
 BVH Build Time: 26 milliseconds
 
